@@ -1,72 +1,29 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using PrinciplesSOLID.Controllers;
 using PrinciplesSOLID.Interfaces;
 using PrinciplesSOLID.Services;
 using PrinciplesSOLID.Settings;
 
 namespace PrinciplesSOLID
 {
-    //Краткое резюме по принципам SOLID в этой реализации:
-    //SRP(Single Responsibility Principle): Каждый класс имеет одну четкую ответственность (например, AppSettingsProvider отвечает только за чтение настроек, NumberGuessingGame - за игровую логику).
-    //OCP (Open/Closed Principle): Можно добавлять новые источники настроек (например, из базы данных), реализуя интерфейс IGameSettingsProvider, не изменяя класс NumberGuessingGame.
-    //LSP (Liskov Substitution Principle): AppSettingsProvider(или любая другая реализация IGameSettingsProvider) может быть использован вместо базового типа IGameSettingsProvider без нарушения работы приложения.
-    //ISP (Interface Segregation Principle): Интерфейсы(например, IGameSettingsProvider, INumberGuessingGame) разделены, чтобы классы зависели только от методов, которые им необходимы.
-    //DIP (Dependency Inversion Principle): Классы верхнего уровня (например, NumberGuessingGame) зависят от абстракций (интерфейсов), а не от конкретных реализаций. Зависимости внедряются с использованием DI.
-
     public class Program
     {
         private static void Main(string[] args)
         {
-            // Build configuration
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            var builder = Host.CreateApplicationBuilder(args);
+            builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
 
-            IConfiguration configuration = builder.Build();
+            builder.Services.AddSingleton<IGameSettingsProvider, GameSettingsProvider>();
+            builder.Services.AddSingleton<INumberGuessingGame, NumberGuessingGame>();
+            builder.Services.AddSingleton<IUserInterface, ConsoleUserInterface>();
+            builder.Services.AddSingleton<GameController>();
 
-            // Setup dependency injection
-            var serviceProvider = new ServiceCollection()
-                .AddSingleton(configuration)
-                .AddSingleton<IGameSettingsProvider, AppSettingsProvider>()
-                .AddSingleton<INumberGuessingGame, NumberGuessingGame>()
-                .BuildServiceProvider();
+            var host = builder.Build();
 
-            // Getting services from a DI container.
-            var settingsProvider = serviceProvider.GetService<IGameSettingsProvider>();
-            var game = serviceProvider.GetService<INumberGuessingGame>();
-
-            // Start the game
-            Console.WriteLine("Welcome to Guess the Number!");
-            Console.WriteLine($"I'm thinking of a number between {settingsProvider.GetSettings().MinRange} and {settingsProvider.GetSettings().MaxRange}.");
-            game.DisplayRemainingAttempts();
-
-            while (game.HasAttemptsLeft())
-            {
-                Console.Write("Take a guess: ");
-                if (int.TryParse(Console.ReadLine(), out int guess))
-                {
-                    if (game.Guess(guess))
-                    {
-                        Console.WriteLine("Congratulations! You guessed the number!");
-                        return;
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input. Please enter a number.");
-                }
-
-                if (game.HasAttemptsLeft())
-                {
-                    game.DisplayRemainingAttempts();
-                }
-                else
-                {
-                    Console.WriteLine("You ran out of attempts. Better luck next time!");
-                }
-            }
-
-            Console.ReadLine();
+            var gameController = host.Services.GetRequiredService<GameController>();
+            gameController.Run();
         }
     }
 }
