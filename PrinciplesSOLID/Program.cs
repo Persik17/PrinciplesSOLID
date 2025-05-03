@@ -18,6 +18,7 @@ namespace PrinciplesSOLID
             builder.Services.AddSingleton<IGameSettingsProvider, GameSettingsProvider>();
             builder.Services.AddSingleton<INumberGuessingGame, NumberGuessingGame>();
             builder.Services.AddSingleton<IUserInterface, ConsoleUserInterface>();
+            builder.Services.AddSingleton<IValidateInput, NumberFormatValidator>();
             builder.Services.AddSingleton<GameController>();
 
             var host = builder.Build();
