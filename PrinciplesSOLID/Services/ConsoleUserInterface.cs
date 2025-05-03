@@ -1,4 +1,5 @@
 ﻿using PrinciplesSOLID.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace PrinciplesSOLID.Services
 {
@@ -7,7 +8,12 @@ namespace PrinciplesSOLID.Services
     /// </summary>
     public class ConsoleUserInterface : IUserInterface
     {
-        public ConsoleUserInterface() { }
+        private readonly IValidateInput _formatValidator;
+
+        public ConsoleUserInterface(IValidateInput formatValidator)
+        {
+            _formatValidator = formatValidator;
+        }
 
         public void ShowMessage(string message)
         {
@@ -19,11 +25,12 @@ namespace PrinciplesSOLID.Services
             Console.Write("Enter your guess: ");
             string input = Console.ReadLine();
 
-            if (int.TryParse(input, out int guess))
+            try
             {
-                return guess;
+                _formatValidator.Validate(input);
+                return int.Parse(input);
             }
-            else
+            catch (ValidationException)
             {
                 Console.WriteLine("Invalid input. Please enter a number.");
                 return GetGuess();
