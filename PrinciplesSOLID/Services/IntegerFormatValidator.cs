@@ -6,9 +6,9 @@ namespace PrinciplesSOLID.Services
     /// <summary>
     /// Validator for ensuring input is a valid integer number.
     /// </summary>
-    public class NumberFormatValidator : IValidateInput
+    public class IntegerFormatValidator : IValidateInput
     {
-        public NumberFormatValidator() { }
+        public IntegerFormatValidator() { }
 
         public void Validate(string input)
         {
