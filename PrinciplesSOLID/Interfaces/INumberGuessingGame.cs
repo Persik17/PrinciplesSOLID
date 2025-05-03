@@ -15,14 +15,25 @@ namespace PrinciplesSOLID.Interfaces
         bool Guess(int guess);
 
         /// <summary>
-        /// A method for checking if the player has any attempts left.
+        /// Gets the remaining attempts.
         /// </summary>
-        /// <returns></returns>
-        bool HasAttemptsLeft();
+        int AttemptsLeft { get; }
 
         /// <summary>
-        /// A method for displaying the remaining attempts.
+        /// Randomized number
         /// </summary>
-        void DisplayRemainingAttempts();
+        int SecretNumber { get; }
+
+        /// <summary>
+        /// Starts a new game with a new random secret number.
+        /// </summary>
+        void StartNewGame();
+
+        /// <summary>
+        /// Gets the result of the guess.
+        /// </summary>
+        /// <param name="guess">The player's guess.</param>
+        /// <returns>A string describing the result.</returns>
+        string GetResult(int guess);
     }
 }

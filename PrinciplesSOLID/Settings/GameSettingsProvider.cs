@@ -4,7 +4,6 @@ using PrinciplesSOLID.Models;
 
 namespace PrinciplesSOLID.Settings
 {
-
     /// <summary>
     /// The AppSettingsProvider class is a specific implementation of IGameSettingsProvider,
     /// which gets the settings from the appsettings.json file.  Implements SRP, as it is responsible only for reading the settings.
@@ -20,7 +19,6 @@ namespace PrinciplesSOLID.Settings
         /// </summary>
         /// <param name="configuration"></param>
         public GameSettingsProvider(IConfiguration configuration) => _configuration = configuration;
-
 
         // Implementation of the getSettings() method from the IGameSettingsProvider interface.
         // Reads the settings from the "GameSettings" section in the appsettings.json file.

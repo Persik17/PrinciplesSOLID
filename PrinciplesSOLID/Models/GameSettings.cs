@@ -1,7 +1,7 @@
 ﻿namespace PrinciplesSOLID.Models
 {
     /// <summary>
-    /// The GameSettings class is a data model for game settings.  It is a simple structure for storing settings.
+    /// The GameSettings class is a data model for game settings.
     /// </summary>
     public class GameSettings
     {
