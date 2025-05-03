@@ -11,7 +11,7 @@ namespace PrinciplesSOLID.Settings
     /// Also implements OCP, as we can add new implementations of the IGameSettingsProvider interface
     /// without changing the NumberGuessingGame
     /// </summary>
-    public class AppSettingsProvider : IGameSettingsProvider
+    public class GameSettingsProvider : IGameSettingsProvider
     {
         private readonly IConfiguration _configuration;
 
@@ -19,7 +19,7 @@ namespace PrinciplesSOLID.Settings
         /// Constructor of the class. Uses Dependency Injection to get the IConfiguration.
         /// </summary>
         /// <param name="configuration"></param>
-        public AppSettingsProvider(IConfiguration configuration) => _configuration = configuration;
+        public GameSettingsProvider(IConfiguration configuration) => _configuration = configuration;
 
 
         // Implementation of the getSettings() method from the IGameSettingsProvider interface.
